@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Memory Game</title>
+    <style>
+      .card {height: 100px;}
+    </style>
+  </head>
+  <body>
+    <div id="game_board"></div>
+    <script>
+        document.body.onload = addElement;
+				//path to our board design face up image
+				var faceDown = "http://127.1.1.1:8010/memory-game/bird.jpg";
+				var faceUp1 = "";
+				var faceUp2 = "";
+				//This is the source of all of our possible cat pair pics 
+				//that the user can try to match. We will store them in an array.
+        var cat1 = "https://http.cat/100";
+        var cat2 = "https://http.cat/101";
+        var cat3 = "https://http.cat/200";
+        var cat4 = "https://http.cat/201";
+        var cat5 = "https://http.cat/202";
+        var cat6 = "https://http.cat/204";
+        var cat7 = "https://http.cat/206";
+        var cat8 = "https://http.cat/207";
+        var catArr = [cat1, cat1, cat2, cat2, cat3, cat3, cat4, cat4, cat5, cat5, cat6, cat6, cat7, cat7, cat8, cat8];
+        //console.log("this is the first cat ", catArr[0]);
+				//randomize array come back too later
+				//console.log("first cat", catArr[0]);
+        function addElement() {
+          /*Create the table and game structure.
+            Start with the 'td' and then make it child of the image. 
+            Add a class name of "car" to the image so we can reference it later 
+            Add an on-click attribute so that we can call a function to change the image source to a cat later on. 
+            Then make the image a child of the row and then the row a child of a table. 
+            This all creates exactly 1 clickable tile.*/
+					var newTable = document.createElement("table");
+          var faceUp = "http://127.1.1.1:8010/memory-game/bird.jpg";
+					//this loop controls the number of rows 
+          for (var i = 0; i < 4; i++) {
+            var newRow = document.createElement("tr");
+					//this inner for loop controls the number of columns
+						for (var j = 0; j <4; j++) {
+              var newData = document.createElement("td");
+              var newImg = document.createElement("img");
+              newImg.className = "card";
+							newImg.faceSrc = catArr[Math.floor((Math.random() * 10) + 1)];
+              newImg.src = faceDown;
+              newImg.onclick = showCat;
+              newData.appendChild(newImg);
+              newRow.appendChild(newData);
+              newTable.appendChild(newRow);
+            }
+					}
+
+          /*dynamically create board
+					This is done by creating a new variable currentDiv and 
+					assigning it to the div with ID of "game_board".
+					Then we use insertBefore method to put our new table
+					into currentDiv*/
+          var currentDiv = document.getElementById("game_board");
+          document.body.insertBefore(newTable, currentDiv);
+
+        }
+
+
+				//a function that takes one of the face cards (when clicked by user)
+				//and reveal what card is underneath. The card show only be displayed
+				//for 10 seconds after the second card is displayed
+        
+				function showCat(mouseEvent){
+          //get the element that called the function
+          //hide the face of the card and show the cat there by changing source attribute
+					console.log("this is the properties mouseEvent gives me", mouseEvent);
+					//mouseEvent.target is giving me the element that I click on. 
+					//Example: <img class="card" src="https://http.cat/200">
+					//So then I use the "src" property of target to change the source 
+					//by maniuplating the cat pics in the cat array
+          //mouseEvent.target.src = catArr[Math.floor((Math.random() * 10) + 1)];
+					if (mouseEvent.target.src === faceDown) {
+							mouseEvent.target.src = mouseEvent.target.faceSrc;
+						if (faceUp1 == "") {
+							faceUp1 = mouseEvent.target.faceSrc;
+							console.log("faceUp 1 is set", faceUp1)
+						} else if (!faceUp1 == "" && faceUp2 == "") {
+							faceUp2 = mouseEvent.target.faceSrc;
+							console.log("face 1 and 2 is set", faceUp1 + " " + faceUp2);
+							if (faceUp1 == faceUp2) {
+									console.log("Match found! ", faceUp1 + " " + faceUp2);
+									setTimeout(function (ele) {ele.currentTarget.src = faceDown;}, 5000);
+							} else {
+								console.log("Match not found!");
+								setTimeout(function () {mouseEvent.target.src = faceDown;}, 5000);
+							}
+						
+						}
+					//flip card back over to normal face after 5 seconds
+					//showCat2();
+					} else {
+						console.log("this card is already faced up")
+					};
+        } 
+			/*	
+				function showCat2(mouseEvent2){
+          //get the element that called the function
+          //hide the face of the card and show the cat there by changing source attribute
+					console.log("this is the properties mouseEvent gives me", mouseEvent);
+					//mouseEvent.target is giving me the element that I click on. 
+					//Example: <img class="card" src="https://http.cat/200">
+					//So then I use the "src" property of target to change the source 
+					//by maniuplating the cat pics in the cat array
+          //mouseEvent.target.src = catArr[Math.floor((Math.random() * 10) + 1)];
+          mouseEvent.target.src = mouseEvent2.target.faceSrc;
+					//flip card back over to normal face after 5 seconds
+					setTimeout(function () {mouseEvent2.target.src = "bird.jpg"}, 5000);
+        }
+				*/
+    </script>
+  </body>
+</html>
